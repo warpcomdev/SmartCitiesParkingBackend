@@ -1,0 +1,13 @@
+﻿<soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:V3Click">
+	<soapenv:Header/>
+	<soapenv:Body>
+		<urn:addCodification soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+			<V3LeadID xsi:type="xsd:int">{0}</V3LeadID>
+			<codificationID xsi:type="xsd:string">{1}</codificationID>
+			<codificationDescription xsi:type="xsd:string">{2}</codificationDescription>
+			<codificationDate xsi:type="xsd:string">{3}</codificationDate>
+			<agency xsi:type="xsd:string">{4}</agency>
+			<agencyIp xsi:type="xsd:string">{5}</agencyIp>
+		</urn:addCodification>
+	</soapenv:Body>
+</soapenv:Envelope>

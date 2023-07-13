@@ -1,0 +1,12 @@
+﻿<soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:V3Click">
+	<soapenv:Header/>
+	<soapenv:Body>
+		<urn:addLead soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+			<phoneNumber xsi:type="xsd:int">{0}</phoneNumber>
+			<freePhone xsi:type="xsd:int">{1}</freePhone>
+			<agency xsi:type="xsd:string">{2}</agency>
+			<agencyIp xsi:type="xsd:string">{3}</agencyIp>
+			<agencyLeadID xsi:type="xsd:string">{4}</agencyLeadID>
+		</urn:addLead>
+	</soapenv:Body>
+</soapenv:Envelope>

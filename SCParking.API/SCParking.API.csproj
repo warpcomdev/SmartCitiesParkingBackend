@@ -1,0 +1,97 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+	  <AssemblyVersion>1.0.0.0</AssemblyVersion>
+	  <FileVersion>1.0.0.0</FileVersion>
+	  <Version>1.0.0.0</Version>
+  </PropertyGroup>
+	<PropertyGroup>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<NoWarn>$(NoWarn);1591</NoWarn>
+		<UserSecretsId>2b7b6d18-b071-47b7-93d1-a25b88816b58</UserSecretsId>
+		<AssemblyName>SCParking.API</AssemblyName>
+		<RootNamespace>SCParking.API</RootNamespace>
+	</PropertyGroup>
+	<ItemGroup>
+	  <None Remove="Templates\email-cambio-cuenta-nueva.html" />
+	  <None Remove="Templates\email-cambio-ok.html" />
+	  <None Remove="Templates\invitacion.html" />
+	  <None Remove="Templates\Logo-LAIA.png" />
+	  <None Remove="Templates\Logo-LAIA.svg" />
+	  <None Remove="Templates\password-cambio-ok.html" />
+	  <None Remove="Templates\password-cambio-solicitud.html" />
+	  <None Remove="Templates\RequestV2ClickFreePhone.xml" />
+	  <None Remove="Templates\RequestV3ClickCodifications.xml" />
+	  <None Remove="Templates\wizard-continuar.html" />
+	  <None Remove="Templates\wizard-recordatorio.html" />
+	  <None Remove="uploads\avatars\Nota.txt" />
+	  <None Remove="uploads\files\Note.txt" />
+	  <None Remove="uploads\logos\Nota.txt" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Content Include="Templates\email-cambio-cuenta-nueva.html">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Templates\email-cambio-ok.html">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Templates\invitacion.html">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Templates\Logo-LAIA.png">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Templates\Logo-LAIA.svg">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Templates\password-cambio-ok.html">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Templates\password-cambio-solicitud.html">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Templates\RequestV2ClickFreePhone.xml">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Templates\RequestV3ClickCodifications.xml">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Templates\wizard-continuar.html">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Templates\wizard-recordatorio.html">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="uploads\avatars\Nota.txt">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="uploads\files\Note.txt">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="uploads\logos\Nota.txt">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	</ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="4.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Log4Net.AspNetCore" Version="3.1.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.7.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.5.1" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.7.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SCParking.Infrastructure\SCParking.Infrastructure.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Properties\launchSettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties properties_4launchsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
+
+
+</Project>

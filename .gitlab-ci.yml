@@ -1,0 +1,15 @@
+image: nosolosoftware/ci:18.04
+
+stages:
+  - deploy
+
+deploy_dev_azure:
+  stage: deploy
+  tags:
+    - micro
+  script:
+    - git push -f $AZURE_GIT_URL $CI_COMMIT_SHA:refs/heads/master
+  when: manual
+  only:
+    - development@laia/back
+    - test@laia/back
