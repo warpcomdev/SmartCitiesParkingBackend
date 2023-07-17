@@ -19,6 +19,7 @@ namespace SCParking.Infrastructure
             services.AddScoped<IRateDetailsService, RateDetailsService>();
             services.AddScoped<IParkingService, ParkingService>();
             services.AddScoped<IParkingReservationService, ParkingReservationService>();
+            services.AddScoped<IMuyBiciService, MuyBiciService>();
             
 
             //Repositories           

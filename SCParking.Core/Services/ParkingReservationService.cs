@@ -29,7 +29,7 @@ namespace SCParking.Core.Services
                 Id = Guid.NewGuid(),
                 ParkingSpotId = parkingId,
                 Status = "reserved",
-                StartAt = reservationParking.reservationStartAt == null?DateTime.Now : DateTime.ParseExact(reservationParking.reservationStartAt+":00","dd/MM/yyyy HH:mm:ss",CultureInfo.InvariantCulture),
+                StartAt = reservationParking.reservationStartAt == null?DateTime.Now : DateTime.ParseExact(reservationParking.reservationStartAt,"dd/MM/yyyy HH:mm:ss",CultureInfo.InvariantCulture),
                 Duration = reservationParking.duration,
                 EndAt = reservationEndAt,
                 UserToken = reservationParking.tokenUser

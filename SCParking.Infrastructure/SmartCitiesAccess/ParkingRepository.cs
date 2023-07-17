@@ -5,15 +5,14 @@ using SCParking.Domain.Interfaces;
 using SCParking.Domain.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
-using System.Data;
 using System.Linq;
 using Newtonsoft.Json;
 using SCParking.Domain.Common;
 using SCParking.Domain.SmartCitiesModels;
 using SCParking.Domain.Views.DTOs;
 using TimeInstant = SCParking.Domain.Views.DTOs.TimeInstant;
-using Location = SCParking.Domain.Views.DTOs.Location;
 using Occupied = SCParking.Domain.Views.DTOs.Occupied;
 using Metadata = SCParking.Domain.Views.DTOs.Metadata;
 
@@ -49,8 +48,26 @@ namespace SCParking.Infrastructure.SmartCitiesAccess
         {
             try
             {
-
+                Stopwatch timeMeasure = new Stopwatch();
+                timeMeasure.Start();
                 var parkingSpotResponse = await _smartCityRepository.GetEntities(token);
+                timeMeasure.Stop();
+                Console.WriteLine($"Tiempo Obteniendo todos los parkings: {timeMeasure.Elapsed.TotalMilliseconds/1000} segundos");
+                //Filtrando por el tipo
+                if (!string.IsNullOrEmpty(placeType) && placeType == Constants.PlaceTypePMR)
+                {
+                    parkingSpotResponse = parkingSpotResponse
+                        .Where(p => p.Description != null && p.Description.Value.Contains(Constants.PlaceTypePMRDescription)).ToList();
+                }
+                else if(!string.IsNullOrEmpty(placeType) && placeType == Constants.PlaceTypeVE)
+                {
+                    
+                    parkingSpotResponse = parkingSpotResponse
+                        .Where(p => p.Description != null && p.Description.Value != Constants.PlaceTypePMRDescription).ToList();
+                }
+
+
+
                 if (!string.IsNullOrEmpty(status) && !Constants.PARKING_STATUS_RESERVED.Equals(status))//Si debo obtener los free o occupied
                 {
                     //Excluir los reservados
@@ -91,6 +108,7 @@ namespace SCParking.Infrastructure.SmartCitiesAccess
             catch (Exception e)
             {
                 _logger.LogError(e.Message);
+               
                 return null;
             }
         }
@@ -184,7 +202,8 @@ namespace SCParking.Infrastructure.SmartCitiesAccess
             parkingSpotResponse.Location = new Domain.Views.DTOs.Location();
             parkingSpotResponse.Location.Coordinates = parkingSpot.Location.Value.Coordinates;
             parkingSpotResponse.Name = parkingSpot.Name.Value;
-            parkingSpotResponse.RefParkingSite = parkingSpot.RefOnStreetParking.Value;
+            if(parkingSpot.RefOnStreetParking != null)
+                parkingSpotResponse.RefParkingSite = parkingSpot.RefOnStreetParking.Value;
             if (Constants.PARKING_STATUS_RESERVED.Equals(parkingSpotResponse.Status))
             {
                 //Si está reservado agrego token usuario y fecha de reserva

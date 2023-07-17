@@ -97,7 +97,7 @@ namespace SCParking.Domain.SmartCitiesModels
         public string Type { get; set; }
 
         [JsonProperty("value")]
-        public long Value { get; set; }
+        public long? Value { get; set; }
 
         [JsonProperty("metadata")]
         public Metadata Metadata { get; set; }

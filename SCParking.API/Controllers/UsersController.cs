@@ -1,9 +1,4 @@
-﻿using System;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using SCParking.Core.Interfaces;
-using SCParking.Domain.Validation;
-using SCParking.Domain.Views.DTOs;
+﻿using SCParking.Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;

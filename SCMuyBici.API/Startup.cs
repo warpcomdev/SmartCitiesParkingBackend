@@ -1,25 +1,22 @@
-using System;
-using System.Text;
-using SCParking.API.Helpers;
-using SCParking.Infrastructure;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
-using System.Reflection;
-using System.IO;
 using Newtonsoft.Json;
-using SCParking.Infrastructure.ContextDb;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
-using Microsoft.AspNetCore.HttpOverrides;
+using SCMuyBici.API.Helpers;
 
-namespace SCParking.API
+using SCParking.Infrastructure;
+using SCParking.Infrastructure.ContextDb;
+using System;
+using System.IO;
+using System.Reflection;
+using System.Text;
+
+namespace SCMuyBici.API
 {
     public class Startup
     {
@@ -43,8 +40,8 @@ namespace SCParking.API
                 options.SwaggerDoc("v1",
                     new Microsoft.OpenApi.Models.OpenApiInfo
                     {
-                        Title = "SmartCities Parking API",
-                        Description = "API SmartCities Parking",
+                        Title = "SmartCities MuyBici API",
+                        Description = "API SmartCities MuyBici",
                         Version = "v1",
                         TermsOfService = new Uri("https://www.laia-digital.com/aviso-legal/"),
                     });
@@ -52,7 +49,7 @@ namespace SCParking.API
                 var filename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var filepath = Path.Combine(AppContext.BaseDirectory, filename);
                 options.IncludeXmlComments(filepath);
-                var securityScheme = new OpenApiSecurityScheme
+                /*var securityScheme = new OpenApiSecurityScheme
                 {
                     Name = "JWT Authentication",
                     Description = "Enter JWT Bearer token **_only_**",
@@ -65,16 +62,16 @@ namespace SCParking.API
                         Id = JwtBearerDefaults.AuthenticationScheme,
                         Type = ReferenceType.SecurityScheme
                     }
-                };
-                options.AddSecurityDefinition(securityScheme.Reference.Id, securityScheme);
-                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                };*/
+               // options.AddSecurityDefinition(securityScheme.Reference.Id, securityScheme);
+                /*options.AddSecurityRequirement(new OpenApiSecurityRequirement
                 {
                     {securityScheme, new string[] { }}
-                });
+                });*/
             });
-           
+
             services.AddDbContext<SmartCities_Context>(options =>
-            options.UseSqlServer(Configuration.GetConnectionString("defaultConnection")));
+            options.UseSqlServer(Environment.GetEnvironmentVariable("defaultConnection")));
 
             //CORS Support
             services.AddCors(options => {
@@ -84,7 +81,7 @@ namespace SCParking.API
                  .AllowAnyHeader());
             });
 
-            
+
             //Add Api Versioning
             services.AddApiVersioning(x =>
             {
@@ -93,11 +90,11 @@ namespace SCParking.API
                 x.ReportApiVersions = true;
             });
 
-           /* services.Configure<ApiBehaviorOptions>(options =>
-            {
-                options.SuppressModelStateInvalidFilter = true;
-            });*/
-          
+            /* services.Configure<ApiBehaviorOptions>(options =>
+             {
+                 options.SuppressModelStateInvalidFilter = true;
+             });*/
+
 
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
@@ -108,7 +105,7 @@ namespace SCParking.API
             var validIssuer = appSettings.Jwt_Issuer_Token;
             var validAudience = appSettings.Jwt_Audience_Token;
 
-            services.AddAuthentication(x =>
+            /*services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -128,14 +125,14 @@ namespace SCParking.API
                     ValidAudience = validAudience,
                     ClockSkew = TimeSpan.Zero
                 };
-            });
+            });*/
 
-            services.AddAuthorization(config =>
+           /* services.AddAuthorization(config =>
             {
-               /* config.AddPolicy(Policies.Admin, Policies.AdminPolicy());
-                config.AddPolicy(Policies.User, Policies.UserPolicy());
-                config.AddPolicy(Policies.UserApi, Policies.UserApiPolicy());*/
-            });
+                /* config.AddPolicy(Policies.Admin, Policies.AdminPolicy());
+                 config.AddPolicy(Policies.User, Policies.UserPolicy());
+                 config.AddPolicy(Policies.UserApi, Policies.UserApiPolicy());*/
+            //});
 
 
             RegisterServices(services);
@@ -154,23 +151,16 @@ namespace SCParking.API
             {
                 app.UseDeveloperExceptionPage();
             }
-            if (!env.IsDevelopment())
-            {
-                app.UseHttpsRedirection();
-            }
 
             loggerFactory.AddLog4Net();
 
-            
+            app.UseHttpsRedirection();
 
             app.UseRouting();
 
             //// global cors policy
             app.UseCors("CorsPolicy");
-            app.UseForwardedHeaders(new ForwardedHeadersOptions
-            {
-                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-            });
+
             app.UseAuthentication();
             app.UseAuthorization();
 
@@ -183,7 +173,7 @@ namespace SCParking.API
 
             app.UseSwaggerUI(options =>
             {
-                options.SwaggerEndpoint("/swagger/v1/swagger.json", "SmartCities Parking Application");
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "SmartCities MuyBici Application");
                 options.RoutePrefix = "";
             });
 

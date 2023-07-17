@@ -5,12 +5,14 @@ using SCParking.Domain.Interfaces;
 using SCParking.Domain.Models;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
-using System.Data;
 using System.Linq;
 using SCParking.Domain.Common;
 using SCParking.Domain.SmartCitiesModels;
-
+using Newtonsoft.Json;
+using RestSharp.Serialization.Json;
+using SCParking.Domain.Views.DTOs;
 
 namespace SCParking.Infrastructure.SmartCitiesAccess
 {
@@ -80,13 +82,56 @@ namespace SCParking.Infrastructure.SmartCitiesAccess
             
         }
 
-        public async Task<List<ParkingSpot>> GetEntities(string token)
+        public async Task SendBatchEntities(string token,BiciEntityRequestDto biciEntityRequestDto)
         {
             try
             {
                 var urlAuthentication = _settings.Where(x => x.SettingCode == Constants.Setting_URLSCENTITY).FirstOrDefault().Value;
                 List<ParkingSpot> entity = new List<ParkingSpot>();
-                var client = new RestClient(urlAuthentication + "/entities");
+                var client = new RestClient(urlAuthentication + "/op/update");
+                client.RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true;
+                client.Timeout = -1;
+                var request = new RestRequest(Method.POST);
+
+                request.AddHeader("Fiware-service", "murcia");
+                request.AddHeader("Fiware-servicepath", "/bicicletas");
+                request.AddHeader("X-Auth-Token", token);
+                request.AddHeader("Content-Type", "application/json");
+                request.JsonSerializer = new RestSharp.Serialization.Json.JsonSerializer();
+                
+                request.JsonSerializer.ContentType = "application/json; charset=utf-8";
+                request.AddJsonBody(biciEntityRequestDto);
+                _logger.LogInformation(JsonConvert.SerializeObject(biciEntityRequestDto));
+                
+
+                IRestResponse response = await client.ExecuteAsync(request);
+
+                if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
+                {
+                    var bodyResponse = response.Content;
+                    _logger.LogInformation(response.ToString());
+                }
+
+                
+
+
+
+
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                
+            }
+        }
+        public async Task<List<ParkingSpot>> GetEntities(string token)
+        {
+            try
+            {
+                var urlAuthentication = _settings.Where(x => x.SettingCode == Constants.Setting_URLSCENTITY).FirstOrDefault().Value;
+                _logger.LogInformation($"Url obtener parkings {urlAuthentication}");
+                List<ParkingSpot> entity = new List<ParkingSpot>();
+                var client = new RestClient(urlAuthentication + "/entities?options=count&limit=1000");
                 client.RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true;
                 client.Timeout = -1;
                 var request = new RestRequest(Method.GET);
@@ -99,9 +144,14 @@ namespace SCParking.Infrastructure.SmartCitiesAccess
                 if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 {
                     var bodyResponse = response.Content;
+                    _logger.LogInformation(bodyResponse);
                     entity = ParkingSpots.FromJson(bodyResponse);
-
+                    _logger.LogInformation(entity.Count.ToString());
                     return entity;
+                }
+                else
+                {
+                    _logger.LogInformation("Status de la invocación a telefónica "+response.StatusCode.ToString()+response.ErrorMessage); 
                 }
 
                 return null;
@@ -117,8 +167,117 @@ namespace SCParking.Infrastructure.SmartCitiesAccess
             }
         }
 
+        public async Task<ICollection<BiciEntityDto>> GetMuyBicisEntity()
+        {
+            try
+            {
+                var urlAuthentication = _settings.Where(x => x.SettingCode == Constants.Setting_URL_MUYBICI_ENTITY).FirstOrDefault().Value;
+                List<MuyBici> entity = new List<MuyBici>();
+                var client = new RestClient(urlAuthentication );
+                client.RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true;
+                client.Timeout = -1;
+                var request = new RestRequest(Method.GET);
 
-        
+                
+                IRestResponse response = await client.ExecuteAsync(request);
 
+                if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    var bodyResponse = response.Content;
+                    entity = JsonConvert.DeserializeObject<MuyBiciResponseDto>(bodyResponse).data;
+                    await CreateOrUpdateBiciEntity(entity);
+                    return await MuyBiciToMuyBiciDto(entity);
+                }
+
+                return null;
+
+
+
+
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return null;
+            }
+        }
+
+        private  async Task CreateOrUpdateBiciEntity(List<MuyBici> entity)
+        {
+            
+        }
+
+        private async Task<ICollection<BiciEntityDto>> MuyBiciToMuyBiciDto(List<MuyBici> entity)
+        {
+            List<BiciEntityDto> lista = new List<BiciEntityDto>();
+            foreach(var muyBici in entity)
+            {
+                DateTime fechaHoraActual = DateTime.Now.ToUniversalTime();
+                lista.Add(new BiciEntityDto()
+                {
+                    id = muyBici.IdAparcamiento.ToString(),
+                    type = "BicycleParking",
+                    TimeInstant = new TimeInstantBici()
+                    {
+                        type = "DateTime",
+                        value = DateTime.Now.ToString(@"yyyy-MM-dd\THH:mm:ss.fff\Z")
+                    },
+                    availableSpot = new Spot()
+                    {
+                        value = muyBici.Libres,
+                        type = "Number"
+                    },
+                        
+                    description = new TimeInstantBici()
+                    {
+                        type = "Text",
+                        value = muyBici.Descripcion,
+                    },
+                        
+                    location = new LocationBici()
+                    {
+                        type = "geo:json",
+                        value = new ValueLocationBici()
+                        {
+                            type = "Point",
+                            coordinates = new List<double>()
+                            {
+                                muyBici.Longitude,
+                                muyBici.Latitude
+                            }
+                        }
+                        
+                    },
+                    municipality = new TimeInstantBici()
+                    {
+                        value = "NA",
+                        type = "Text"
+                    },
+                        
+                    occupiedSpot = new Spot()
+                    {
+                        type = "Number",
+                        value = muyBici.Ocupados,
+                    },
+                    shortName = new TimeInstantBici()
+                    {
+                        type = "Text",
+                        value = muyBici.Nombrecorto,
+                    },
+                    status = new TimeInstantBici()
+                    {
+                        value = muyBici.Eshabilitada==1? "free":"occupied",
+                        type = "Text"
+                    },
+                    totalSpot = new Spot()
+                    {
+                        type = "Number",
+                        value = muyBici.NumPuestos
+                    }
+
+                }) ;
+            }
+            return lista;
+        }
     }
 }

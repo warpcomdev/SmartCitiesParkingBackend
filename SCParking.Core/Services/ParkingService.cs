@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Dynamic;
 using System.Globalization;
 using System.Linq;
@@ -47,9 +48,17 @@ namespace SCParking.Core.Services
 
         public async Task<List<ParkingSpotResponseDto>> GetbyStatus(string status,string placeType)
         {
+            Stopwatch timeMeasure = new Stopwatch();
+            timeMeasure.Start();
+            _logger.LogInformation($"Parámetros Status:{status} y PlaceType:{placeType}");
+            
             var usrParking = _settings.Where(x => x.SettingCode == Constants.Setting_USRSCSERVICEPARKING).FirstOrDefault().Value;
             var passwordParking = _settings.Where(x => x.SettingCode == Constants.Setting_PASSSCSERVICEPARKING).FirstOrDefault().Value;
             var token = await _smartCityRepository.Authenticate("murcia", "/aparcamiento", usrParking, passwordParking);
+            timeMeasure.Stop();
+            Console.WriteLine($"Tiempo Autenticación: {timeMeasure.Elapsed.TotalMilliseconds} ms");
+            Console.WriteLine($"Precision: {(1.0 / Stopwatch.Frequency).ToString("E")} segundos");
+
             return await _parkingRepository.GetByStatus(status, placeType, token);
             // return null;
 
@@ -61,8 +70,8 @@ namespace SCParking.Core.Services
             var error = new ErrorDto();
             dynamic errorField = new ExpandoObject();
             DateTime reservationStartAt = DateTime.ParseExact(reservationParking.reservationStartAt,
-                "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
-            bool isValidStartDate = DateTime.TryParseExact(reservationParking.reservationStartAt, "dd/MM/yyyy HH:mm",
+                "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+            bool isValidStartDate = DateTime.TryParseExact(reservationParking.reservationStartAt, "dd/MM/yyyy HH:mm:ss",
                 CultureInfo.InvariantCulture, DateTimeStyles.None, out _);
             if (isValidStartDate)
             {
@@ -124,7 +133,7 @@ namespace SCParking.Core.Services
             {
                 DateRange dateRange = new DateRange(parkingReservation.StartAt, parkingReservation.EndAt);
                 DateTime reservationStartDate = DateTime.ParseExact(reservationParking.reservationStartAt,
-                    "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
+                    "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
                 if (dateRange.Includes(reservationStartDate) || dateRange.Includes(reservationEndAt))
                 {
                     return false;

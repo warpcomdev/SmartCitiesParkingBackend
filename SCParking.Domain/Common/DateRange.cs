@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using SCParking.Domain.Interfaces;
 
 namespace SCParking.Domain.Common

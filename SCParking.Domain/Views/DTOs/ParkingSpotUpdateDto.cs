@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace SCParking.Domain.Views.DTOs
@@ -54,7 +52,7 @@ namespace SCParking.Domain.Views.DTOs
         [JsonProperty("value")]
         public string Value { get; set; }
 
-        [JsonProperty("metadata")]
+        [JsonProperty("metadata", NullValueHandling = NullValueHandling.Ignore)]
         public Metadata Metadata { get; set; }
     }
 
@@ -88,7 +86,7 @@ namespace SCParking.Domain.Views.DTOs
         public string Type { get; set; }
 
         [JsonProperty("value")]
-        public long Value { get; set; }
+        public long? Value { get; set; }
 
         [JsonProperty("metadata")]
         public Metadata Metadata { get; set; }

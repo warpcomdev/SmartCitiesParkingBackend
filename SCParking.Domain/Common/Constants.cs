@@ -74,12 +74,14 @@ namespace SCParking.Domain.Common
         public const string ValidationNoForm= "No Form Id";
 
         public const string PlaceTypePMR = "PMR";
+        public const string PlaceTypePMRDescription = "Plaza de movilidad reducida";
         public const string PlaceTypeVE = "VE";
 
         public const string Setting_URLSCAUTH = "URL_SC_AUTH";
         public const string Setting_URLSCENTITY = "URL_SC_ENTITY";
         public const string Setting_USRSCSERVICEPARKING = "USR_SC_SERVICE_PARKING";
         public const string Setting_PASSSCSERVICEPARKING = "PASS_SC_SERVICE_PARKING";
+        public const string Setting_URL_MUYBICI_ENTITY = "URL_MUYBICI_ENTITY";
 
         public const string PARKING_STATUS_FREE = "free";
         public const string PARKING_STATUS_OCCUPIED = "occupied";

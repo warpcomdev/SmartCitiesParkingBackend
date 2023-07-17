@@ -4,6 +4,8 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <AssemblyName>SCParking.Infrastructure</AssemblyName>
     <RootNamespace>SCParking.Infrastructure</RootNamespace>
+    <AssemblyVersion>1.0.0.11</AssemblyVersion>
+    <FileVersion>1.0.0.11</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -30,6 +32,10 @@
   <ItemGroup>
     <ProjectReference Include="..\SCParking.Core\SCParking.Core.csproj" />
     <ProjectReference Include="..\SCParking.Domain\SCParking.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="SmartCitiesAccess\MuyBici\" />
   </ItemGroup>
 
 </Project>

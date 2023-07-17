@@ -47,8 +47,8 @@ namespace SCParking.API.Controllers
             var currentUserId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             try
             {
-                await _parkingService.Reserve(id, reservationParking);
-                return Ok();
+                var reserva = await _parkingService.Reserve(id, reservationParking);
+                return Ok(reserva.Id);
             }
             catch (InvalidDynamicCommandException ex)
             {

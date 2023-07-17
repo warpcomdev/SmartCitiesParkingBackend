@@ -1,0 +1,45 @@
+﻿{
+  "$schema": "http://json.schemastore.org/launchsettings.json",
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iis": {
+      "applicationUrl": "http://localhost/SCMuyBici.API",
+      "sslPort": 0
+    },
+    "iisExpress": {
+      "applicationUrl": "http://localhost:23773",
+      "sslPort": 44334
+    }
+  },
+  "profiles": {
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "defaultConnection": "Server=tcp:sql-laia-prep.database.windows.net,1433;Initial Catalog=sqldb-smartcities-dev;Persist Security Info=False;User ID=UsrSmartCity;Password=usr$m4rt.d3v;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;",
+        "LAIA_EmailFrom": "no-reply@laia-digital.com",
+        "LAIA_FrontendHost": "https://laia-pre.nosolosoftware.dev",
+        "LAIA_SmtpHost": "smtp.mailtrap.io",
+        "LAIA_SmtpPass": "f18bcb180c57f0",
+        "LAIA_SmtpUser": "a4e080cbecd858",
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "LAIA_SmtpPort": "25",
+        "LAIA_ApiHost": "https://localhost:44327",
+        "LAIA_ContainerFiles": ""
+      }
+    },
+    "SCMuyBici.API": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "applicationUrl": "https://localhost:5001;http://localhost:5000",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "Azure Dev Spaces": {
+        "commandName": "AzureDevSpaces",
+        "launchBrowser": true
+      }
+    }
+  }
+}

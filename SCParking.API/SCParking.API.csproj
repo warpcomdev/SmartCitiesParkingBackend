@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-	  <AssemblyVersion>1.0.0.0</AssemblyVersion>
-	  <FileVersion>1.0.0.0</FileVersion>
+	  <AssemblyVersion>1.0.0.8</AssemblyVersion>
+	  <FileVersion>1.0.0.8</FileVersion>
 	  <Version>1.0.0.0</Version>
   </PropertyGroup>
 	<PropertyGroup>
@@ -84,6 +84,14 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SCParking.Infrastructure\SCParking.Infrastructure.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="log4net.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Update="Properties\launchSettings.json">
